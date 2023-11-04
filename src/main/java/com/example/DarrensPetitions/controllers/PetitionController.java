@@ -19,4 +19,11 @@ public class PetitionController {
         model.addAttribute("pageTitle", "Create Page");
         return "create";
     }
+
+    @RequestMapping("/search")
+    public String search(Model model){
+        model.addAttribute("title", "Search for a Petition");
+        model.addAttribute("pageTitle", "Search Page");
+        return "search";
+    }
 }
