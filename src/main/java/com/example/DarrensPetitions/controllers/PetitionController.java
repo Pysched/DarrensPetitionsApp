@@ -12,4 +12,11 @@ public class PetitionController {
         model.addAttribute("pageTitle", "Index Page");
         return "index";
     }
+
+    @RequestMapping("/create")
+    public String create(Model model){
+        model.addAttribute("title", "Create a Petition");
+        model.addAttribute("pageTitle", "Create Page");
+        return "create";
+    }
 }
