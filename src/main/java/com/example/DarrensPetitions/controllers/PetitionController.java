@@ -26,4 +26,11 @@ public class PetitionController {
         model.addAttribute("pageTitle", "Search Page");
         return "search";
     }
+
+    @RequestMapping("/result")
+    public String result(Model model){
+        model.addAttribute("title", "Review Petition Result");
+        model.addAttribute("pageTitle", "Result Page");
+        return "result";
+    }
 }
