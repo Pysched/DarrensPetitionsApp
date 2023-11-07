@@ -2,12 +2,10 @@ package com.example.DarrensPetitions.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class PetitionController {
@@ -16,7 +14,13 @@ public class PetitionController {
     public String index(Model model){
         model.addAttribute("title", "Darren's Petitions");
         model.addAttribute("pageTitle", "Index Page");
+
+        // Get a list of petition titles and add it to the model
+        List<String> petitionTitles = petitions.stream()
+                .map(Petition::getPetitionTitle)
+                .toList();
         model.addAttribute("petitions", petitions);
+        model.addAttribute("petitionTitles", petitionTitles);
         return "index"; // Map to "index.html"
     }
 
@@ -27,27 +31,17 @@ public class PetitionController {
         return "create"; // Map to "create.html"
     }
 
-    @RequestMapping(value="create", method = RequestMethod.POST) // Handle the POST request to create a new petition
+    @PostMapping("/create") // Handle the POST request to create a new petition
     public String processCreate(
             @RequestParam String petitionTitle,
             @RequestParam String petitionDescription,
             @RequestParam String petitionAuthor){
-       Petition newPetition = new Petition(); // create a new petition object and populate it with the form data
-       newPetition.setPetitionTitle(petitionTitle);
-       newPetition.setPetitionDescription(petitionDescription);
-       newPetition.setPetitionAuthor(petitionAuthor);
-       petitions.add(newPetition); // add the new petition to the list of petitions
+        Petition petition = new Petition(petitionTitle, petitionDescription, petitionAuthor);
+        petitions.add(petition); // Add the petition to the list of petitions
        return "redirect:"; // Redirect to index page
     }
 
-    @RequestMapping("/search")
-    public String search(Model model){
-        model.addAttribute("title", "Search for a Petition");
-        model.addAttribute("pageTitle", "Search Page");
-        return "search"; // Map to "search.html"
-    }
-
-    @RequestMapping("/result/{petitionTitle}")// handle the GET request to display the result of the search
+    @GetMapping("/result/{petitionTitle}")// handle the GET request to display the result of the search
     public String result(@PathVariable String petitionTitle, Model model){
         model.addAttribute("title", "Review Petition Result");
         model.addAttribute("pageTitle", "Result Page");
@@ -60,11 +54,34 @@ public class PetitionController {
         }
         if (isPetition != null) { // if the petition is found, add it to the model
             model.addAttribute("petition", isPetition);
-            return "result"; // Map to "review.html"
+            return "result"; // Map to "result.html"
         } else {
-            // Handle invalid petitionTitle, return to index page
+            // Handle invalid petitionTitle - return to index page
             return "index";
         }
 
     }
+
+    @PostMapping("/result/{petitionTitle}") // Handle the POST request to sign a petition
+    public String processSignature(@PathVariable String petitionTitle, @ModelAttribute("petition") Petition petition) {
+        for (Petition p : petitions) {
+            if (p.getPetitionTitle().equals(petitionTitle)) {
+                // Create a new Signature object
+                Signature signature = new Signature(petition.getSignupSignature(), petition.getSignupEmail());
+                p.addSignature(signature); // Add the signature to the signatures list & increment the number of signatures
+
+                return "redirect:/result/" + petitionTitle;
+            }
+        }
+        return "index"; // Error handling - return to index page
+    }
+
+    @RequestMapping("/search")
+    public String search(Model model){
+        model.addAttribute("title", "Search for a Petition");
+        model.addAttribute("pageTitle", "Search Page");
+        return "search"; // Map to "search.html"
+    }
+
+
 }
