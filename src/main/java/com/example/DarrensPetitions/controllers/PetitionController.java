@@ -1,5 +1,6 @@
 package com.example.DarrensPetitions.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ public class PetitionController {
     @RequestMapping("/") // Map to root path
     public String index(Model model){
         model.addAttribute("title", "Darren's Petitions");
-        model.addAttribute("pageTitle", "Index Page");
+        model.addAttribute("pageTitle", "View Petitions");
 
         // Get a list of petition titles and add it to the model
         List<String> petitionTitles = petitions.stream()
@@ -27,7 +28,7 @@ public class PetitionController {
     @RequestMapping(value="create", method = RequestMethod.GET) // Map to create path
     public String create(Model model){
         model.addAttribute("title", "Create a Petition");
-        model.addAttribute("pageTitle", "Create Page");
+        model.addAttribute("pageTitle", "Create Petition");
         return "create"; // Map to "create.html"
     }
 
@@ -76,12 +77,22 @@ public class PetitionController {
         return "index"; // Error handling - return to index page
     }
 
-    @RequestMapping("/search")
-    public String search(Model model){
+    @GetMapping("/search") // Handle the initial search page request
+    public String searchPage(Model model) {
         model.addAttribute("title", "Search for a Petition");
-        model.addAttribute("pageTitle", "Search Page");
+        model.addAttribute("pageTitle", "Search Petitions");
         return "search"; // Map to "search.html"
     }
+
+    @GetMapping("/search/{searchTerm}")
+    public ResponseEntity<List<Petition>> getFilteredPetitions(@PathVariable String searchTerm) {
+        // Perform filtering and return filtered petitions as JSON
+        List<Petition> searchResults = petitions.stream()
+                .filter(petition -> petition.getPetitionTitle().contains(searchTerm) || petition.getPetitionDescription().contains(searchTerm))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(searchResults);
+    }
+
 
 
 }
