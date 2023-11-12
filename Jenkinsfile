@@ -18,20 +18,12 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Deploy to Tomcat') {
             steps {
                 script {
-                    docker.build 'my-tomcat-image'
-                }
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    docker.image('my-tomcat-image').inside('-p 9090:8080') {
-                        sh 'cp target/*.war /usr/local/tomcat/webapps/'
-                    }
+                    sh 'cp target/*.war /path/to/tomcat/webapps/'
+                    sh '/path/to/tomcat/bin/shutdown.sh'
+                    sh '/path/to/tomcat/bin/startup.sh'
                 }
             }
         }
