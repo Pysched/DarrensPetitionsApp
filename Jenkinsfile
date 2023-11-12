@@ -2,28 +2,37 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
+        stage('Get Code') {
             steps {
-                script {
-                    git 'https://github.com/Pysched/DarrensPetitions.git'
-                }
+                git 'https://github.com/Pysched/DarrensPetitions'
             }
         }
 
-        stage('Build and Package') {
+        stage('Build') {
             steps {
-                script {
-                    sh 'mvn clean package'
-                }
+                sh 'mvn clean package'
             }
         }
 
-        stage('Deploy to Tomcat') {
+        stage('Package & Archive') {
+            steps {
+                sh 'cp target/DarrensPetitions-1.0-SNAPSHOT.war DarrensPetitions.war'
+            }
+        }
+
+        stage('Deploy') {
             steps {
                 script {
-                    sh 'cp target/*.war /path/to/tomcat/webapps/'
-                    sh '/path/to/tomcat/bin/shutdown.sh'
-                    sh '/path/to/tomcat/bin/startup.sh'
+                    def userInput = input(
+                        message: 'Do you want to deploy to Tomcat?',
+                        parameters: [choice(choices: 'Yes|No', description: 'Choose Yes to deploy', name: 'Deploy')]
+                    )
+
+                    if (userInput == 'Yes') {
+                        sh 'cp DarrensPetitions.war /opt/tomcat/webapps/'
+                        sh '/opt/tomcat/bin/shutdown.sh' // Stop Tomcat if it's running
+                        sh '/opt/tomcat/bin/startup.sh'  // Start Tomcat
+                    }
                 }
             }
         }
