@@ -22,12 +22,9 @@ pipeline {
 
         stage('Archive') {
             steps {
-                  post {
-                      success {
                       archiveArtifacts allowEmptyArchive: true,
                       artifacts: '**/DarrenPetitions.war'
-                      }
-                  }
+
             }
         }
 
