@@ -29,9 +29,8 @@ pipeline {
                     )
 
                     if (userInput == 'Yes') {
-                        sh 'cp DarrensPetitions.war /opt/tomcat/webapps/'
-                        sh '/opt/tomcat/bin/shutdown.sh' // Stop Tomcat if it's running
-                        sh '/opt/tomcat/bin/startup.sh'  // Start Tomcat
+                        // Copy the WAR file into the Tomcat container's webapps directory
+                        sh 'docker cp DarrensPetitions.war tomcat-container:/usr/local/tomcat/webapps/'
                     }
                 }
             }
