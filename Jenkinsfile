@@ -16,9 +16,15 @@ pipeline {
 
         stage('Package & Archive') {
             steps {
-                sh 'cp target/DarrensPetitions-1.0-SNAPSHOT.war DarrensPetitions.war'
+                sh 'ls -l target/' // Check directory contents before copying
+
+                script {
+                    sh 'cp target/DarrensPetitions-1.0-SNAPSHOT.war DarrensPetitions.war'
+                    echo 'WAR file copied successfully!'
+                }
+
+                sh 'ls -l .'
             }
-        }
 
         stage('Deploy') {
             steps {
