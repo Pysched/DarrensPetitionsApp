@@ -23,21 +23,21 @@ pipeline {
                     echo 'WAR file copied successfully!'
                 }
 
-                sh 'ls -l .'
+                sh 'ls -l .' // Check directory contents after copying
             }
+        }
 
-            stage('Deploy') {
-                steps {
-                    script {
-                        def userInput = input(
-                            message: 'Do you want to deploy to Tomcat?',
-                            parameters: [choice(choices: 'Yes|No', description: 'Choose Yes to deploy', name: 'Deploy')]
-                        )
+        stage('Deploy') {
+            steps {
+                script {
+                    def userInput = input(
+                        message: 'Do you want to deploy to Tomcat?',
+                        parameters: [choice(choices: 'Yes|No', description: 'Choose Yes to deploy', name: 'Deploy')]
+                    )
 
-                        if (userInput == 'Yes') {
-                            // Copy the WAR file into the Tomcat container's webapps directory
-                            sh 'docker cp DarrensPetitions.war tomcat-container:/usr/local/tomcat/webapps/'
-                        }
+                    if (userInput == 'Yes') {
+                        // Copy the WAR file into the Tomcat container's webapps directory
+                        sh 'docker cp DarrensPetitions.war tomcat-container:/usr/local/tomcat/webapps/'
                     }
                 }
             }
