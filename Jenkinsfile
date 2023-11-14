@@ -27,9 +27,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                stage ('Deploy') {
+                       stage ('Deploy') {
                            steps {
                                sh 'docker build -f Dockerfile -t tomcat-container . '
                                sh 'docker rm -f "tomcat-container" || true'
