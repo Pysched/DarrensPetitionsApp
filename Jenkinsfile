@@ -14,32 +14,28 @@ pipeline {
             }
         }
 
-        stage('Package & Archive') {
+        stage('Package ') {
             steps {
-                sh 'ls -l target/' // Check directory contents before copying
+                sh 'mvn package'
+            }
+        }
 
-                script {
-                    sh 'cp target/DarrensPetitions-1.0-SNAPSHOT.war DarrensPetitions.war'
-                    echo 'WAR file copied successfully!'
-                }
-
-                sh 'ls -l .' // Check directory contents after copying
+        stage('Archive') {
+            steps {
+                archiveArtifacts allowEmptyArchive: true,
+                                artifacts: 'target/DarrensPetitions.war',
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    def userInput = input(
-                        message: 'Do you want to deploy to Tomcat?',
-                        parameters: [choice(choices: 'Yes|No', description: 'Choose Yes to deploy', name: 'Deploy')]
-                    )
-
-                    if (userInput == 'Yes') {
-                        // Copy the WAR file into the Tomcat container's webapps directory
-                        sh 'docker cp DarrensPetitions.war tomcat-container:/usr/local/tomcat/webapps/'
-                    }
-                }
+                stage ('Deploy') {
+                           steps {
+                               sh 'docker build -f Dockerfile -t myapp . '
+                               sh 'docker rm -f "tomcat-container" || true'
+                               sh 'docker run --name "tomcat-container" -p 8082:8080 --detach tomcat-container:latest'
+                           }
+                       }
             }
         }
     }
