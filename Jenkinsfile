@@ -23,7 +23,7 @@ pipeline {
         stage('Archive') {
             steps {
                 archiveArtifacts allowEmptyArchive: true,
-                artifacts: 'target/DarrensPetitions.war'
+                artifacts: 'DarrensPetitions.war'
             }
         }
 
