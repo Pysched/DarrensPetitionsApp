@@ -54,7 +54,7 @@ pipeline {
                        sh 'docker rm -f "tomcat-container" || true'
 
                        echo 'Running Tomcat container...'
-                       sh 'docker run --name "tomcat-container" -p 9090:8080 --detach darrenspetitions:latest'
+                       sh 'docker run --name "tomcat-container" -p 9091:8080 --detach darrenspetitions:latest'
 
                        echo 'Deployment completed.'
                    } else {
