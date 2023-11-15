@@ -32,31 +32,35 @@ pipeline {
             }
         }
 
-                       stage('Deploy') {
-                           steps {
-                               script {
-                                   echo 'Starting deployment process...'
-                                   def userInput = input(
-                                       message: 'Do you want to deploy to Tomcat?',
-                                       parameters: [choice(choices: 'Yes|No', description: 'Choose Yes to deploy', name: 'Deploy')]
-                                   )
-                                   if (userInput == 'Yes') {
-                                       echo 'Building Docker image...'
-                                       sh 'docker build -f Dockerfile -t DarrensPetitions . '
+       stage('Deploy') {
+           steps {
+               script {
+                   echo 'Starting deployment process...'
+                   def userInput = input(
+                       message: 'Do you want to deploy to Tomcat?',
+                       parameters: [choice(
+                           choices: 'Yes\nNo',
+                           description: 'Choose Yes to deploy',
+                           name: 'Deploy',
+                           choiceType: 'PT_SINGLE_SELECT'
+                       )]
+                   )
+                   if (userInput == 'Yes') {
+                       echo 'Building Docker image...'
+                       sh 'docker build -f Dockerfile -t DarrensPetitions . '
 
-                                       echo 'Removing existing tomcat container (if any)...'
-                                       sh 'docker rm -f "tomcat-container" || true'
+                       echo 'Removing existing Tomcat container (if any)...'
+                       sh 'docker rm -f "tomcat-container" || true'
 
-                                       echo 'Running Tomcat container...'
-                                      sh 'docker run --name "tomcat-container" -p 9090:8080 --detach DarrensPetitions:latest'
+                       echo 'Running Tomcat container...'
+                       sh 'docker run --name "tomcat-container" -p 9090:8080 --detach DarrensPetitions:latest'
 
-                                       echo 'Deployment completed.'
-                                   } else {
-                                       echo 'Deployment aborted.'
-                                   }
-                               }
-                           }
-                       }
-
-            }
-        }
+                       echo 'Deployment completed.'
+                   } else {
+                       echo 'Deployment aborted.'
+                   }
+               }
+           }
+       }
+    }
+}
