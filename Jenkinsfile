@@ -37,10 +37,9 @@ pipeline {
                                    )
                                    if (userInput == 'Yes') {
                                        // Copy the WAR file into the Tomcat container's webapps directory
-                                       sh 'docker cp DarrensPetitions.war tomcat-container:/usr/local/tomcat/webapps/'
                                        sh 'docker build -f Dockerfile -t DarrensPetitions . '
                                        sh 'docker rm -f "tomcat-container" || true'
-                                       sh 'docker run --name "tomcat-container" -p 8085:8080 --detach DarrensPetitions:latest'
+                                       sh 'docker run --name "tomcat-container" -p 9090:8080 --detach DarrensPetitions:latest'
                                    }
                                }
 
