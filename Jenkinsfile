@@ -48,7 +48,9 @@ pipeline {
                                        sh 'docker rm -f "tomcat-container" || true'
 
                                        echo 'Running Tomcat container...'
-                                       sh 'docker run --name "tomcat-container" -p 9090:8080 -v $(pwd)/target/DarrensPetitions-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/DarrensPetitions.war --detach DarrensPetitions:latest'
+                                      sh 'docker run --name "tomcat-container" -p 9090:8080 --detach DarrensPetitions:latest'
+
+                                       echo 'Deployment completed.'
                                    } else {
                                        echo 'Deployment aborted.'
                                    }
