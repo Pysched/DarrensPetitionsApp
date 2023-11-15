@@ -9,11 +9,15 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
+           steps {
+                           script {
+                               sh 'mvn clean package'
+                               def warFile = sh(script: 'find . -name "*.war"', returnStdout: true).trim()
+                               echo "War file location: ${warFile}"
+                           }
+                       }
 
+}
         stage('Package ') {
             steps {
                 sh 'mvn package'

@@ -7,6 +7,5 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 # Copy your WAR file into the Tomcat webapps directory
 COPY /home/dev/.jenkins/DarrensPetitions/DarrensPetitions.war tomcat:/usr/local/tomcat/webapps/
 
-
 # Expose the port the Tomcat server will be listening on
-EXPOSE 9090
+EXPOSE 8080
