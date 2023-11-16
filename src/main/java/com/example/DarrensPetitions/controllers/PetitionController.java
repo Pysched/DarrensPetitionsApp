@@ -84,7 +84,7 @@ public class PetitionController {
         return "search"; // Map to "search.html"
     }
 
-    @GetMapping("/search/{searchTerm}") // Handle the POST request to search for a petition
+    @PostMapping("/search/{searchTerm}") // Handle the POST request to search for a petition
     public ResponseEntity<List<Petition>> getFilteredPetitions(@PathVariable String searchTerm) {
         // Perform filtering and return filtered petitions as JSON
         List<Petition> searchResults = petitions.stream()
