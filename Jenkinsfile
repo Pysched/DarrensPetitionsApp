@@ -47,14 +47,14 @@ pipeline {
                    )
                    if (userInput == 'Yes') {
                        echo 'Building Docker image...'
-                       sh 'docker build -f Dockerfile -t darrenspetitions .'
+                       sh 'docker build -f Dockerfile -t darrenspetitionsapp .'
 
 
                        echo 'Removing existing Tomcat container (if any)...'
-                       sh 'docker rm -f "tomcat-container" || true'
+                       sh 'docker rm -f "darrenspetitionscontainer" || true'
 
                        echo 'Running Tomcat container...'
-                       sh 'docker run --name "tomcat-container" -p 9091:8080 --detach darrenspetitions:latest'
+                       sh 'docker run --name "darrenspetitionscontainer" -p 9090:8080 --detach darrenspetitionsapp:latest'
 
                        echo 'Deployment completed.'
                    } else {
