@@ -39,7 +39,7 @@ public class PetitionController {
             @RequestParam String petitionAuthor){
         Petition petition = new Petition(petitionTitle, petitionDescription, petitionAuthor);
         petitions.add(petition); // Add the petition to the list of petitions
-       return "redirect:"; // Redirect to index page
+       return "redirect:/"; // Redirect to index page
     }
 
     @GetMapping("/result/{petitionTitle}")// handle the GET request to display the result of the search

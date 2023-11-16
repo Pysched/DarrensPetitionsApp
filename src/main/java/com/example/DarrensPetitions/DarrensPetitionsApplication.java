@@ -11,8 +11,6 @@ import java.util.Collections;
 public class DarrensPetitionsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication app = new SpringApplication(DarrensPetitionsApplication.class);
-		app.setDefaultProperties(Collections.singletonMap("server.port", "9090"));
-		app.run(args);
+		SpringApplication.run(DarrensPetitionsApplication.class, args);
 	}
 }
