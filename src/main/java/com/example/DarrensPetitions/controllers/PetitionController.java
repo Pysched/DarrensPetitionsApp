@@ -1,5 +1,6 @@
 package com.example.DarrensPetitions.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,10 +85,12 @@ public class PetitionController {
         return "search"; // Map to "search.html"
     }
 
-    @PostMapping("/search") // Handle the POST request for search and redirect to results page
-    public String searchRedirect(@RequestParam String searchTerm) {
-        return "redirect:/DarrensPetitions/results?searchTerm=" + searchTerm;
+    @PostMapping("/search")
+    public String searchRedirect(@RequestParam String searchTerm, HttpServletRequest request) {
+        String appContext = request.getContextPath(); // Retrieve the application context path
+        return "redirect:" + appContext + "/results?searchTerm=" + searchTerm;
     }
+
 
     @GetMapping("/results") // Handle the GET request to display the search results
     public String searchResults(@RequestParam(name = "searchTerm", required = false) String searchTerm, Model model) {
