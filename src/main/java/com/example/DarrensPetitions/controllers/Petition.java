@@ -101,6 +101,10 @@ public class Petition {
         return signatures; // Return the signatures list
     }
 
+    /**
+     *
+     * @param signature
+     */
     // Method to add a signature to the list and increment the signature count
     public void addSignature(Signature signature) {
         signatures.add(signature); // Add the signature to the signatures list

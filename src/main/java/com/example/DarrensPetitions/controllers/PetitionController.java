@@ -84,14 +84,30 @@ public class PetitionController {
         return "search"; // Map to "search.html"
     }
 
-    @PostMapping("/search/{searchTerm}") // Handle the POST request to search for a petition
-    public ResponseEntity<List<Petition>> getFilteredPetitions(@PathVariable String searchTerm) {
-        // Perform filtering and return filtered petitions as JSON
-        List<Petition> searchResults = petitions.stream()
-                .filter(petition -> petition.getPetitionTitle().contains(searchTerm) || petition.getPetitionDescription().contains(searchTerm))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(searchResults);
+    @PostMapping("/search") // Handle the POST request for search and redirect to results page
+    public String searchRedirect(@RequestParam String searchTerm) {
+        return "redirect:/results?searchTerm=" + searchTerm;
     }
+
+    @GetMapping("/results") // Handle the GET request to display the search results
+    public String searchResults(@RequestParam(name = "searchTerm", required = false) String searchTerm, Model model) {
+        model.addAttribute("title", "Search Results");
+        model.addAttribute("pageTitle", "Search Results");
+        model.addAttribute("searchTerm", searchTerm);
+
+        // Perform filtering and determine if results exist
+        List<Petition> searchResults = petitions.stream()
+                .filter(petition -> petition.getPetitionTitle().contains(searchTerm)
+                        || petition.getPetitionDescription().contains(searchTerm))
+                .collect(Collectors.toList());
+
+        model.addAttribute("searchResults", searchResults);
+        model.addAttribute("noResults", searchResults.isEmpty());
+        model.addAttribute("hasResults", !searchResults.isEmpty());
+        return "results"; // Map to "results.html"
+    }
+
+
 
 
 
