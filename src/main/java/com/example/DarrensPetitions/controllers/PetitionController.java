@@ -86,7 +86,7 @@ public class PetitionController {
 
     @PostMapping("/search") // Handle the POST request for search and redirect to results page
     public String searchRedirect(@RequestParam String searchTerm) {
-        return "redirect:/results?searchTerm=" + searchTerm;
+        return "redirect:/DarrensPetitions/results?searchTerm=" + searchTerm;
     }
 
     @GetMapping("/results") // Handle the GET request to display the search results
